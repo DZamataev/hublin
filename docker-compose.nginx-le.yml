@@ -1,0 +1,43 @@
+version: '3'
+services:
+    whoami:
+        image: jwilder/whoami
+        container_name: whoami
+        hostname: whoami
+        expose:
+          - "8000"
+        ports:
+          - "62732:8000"
+
+
+    nginx:
+        build: .
+        image: umputun/nginx-le:latest
+        hostname: nginx
+        restart: always
+        container_name: nginx
+        depends_on:
+          - "hublin"
+          - "janus-gateway"
+          - "whoami"
+        logging:
+          driver: json-file
+          options:
+              max-size: "10m"
+              max-file: "5"
+
+        volumes:
+            - ./etc/ssl:/etc/nginx/ssl
+            - ./etc/conf/service.conf:/etc/nginx/service.conf
+        ports:
+            - "81:81"
+            - "62733:62733"
+
+        environment:
+            - TZ=America/Chicago
+            - LETSENCRYPT=true
+            - LE_EMAIL=btce.user5917@gmail.com
+            - LE_FQDN=wcs.turboid.ru
+            #- SSL_CERT=le-crt.pem
+            #- SSL_KEY=le-key.pem
+            #- SSL_CHAIN_CERT=le-chain-crt.pem

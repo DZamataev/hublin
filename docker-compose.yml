@@ -19,14 +19,16 @@ services:
     - MONGO_DBNAME=hublin
     ports:
     - "8080:8080"
+    - "8443:8443"
+    - "443:8443"
   mongo:
     container_name: hublin_mongo
     image: mongo:3.2
     ports:
-      - "27017:27017"
+      - "27017"
   redis:
     container_name: hublin_redis
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "6379"
 
